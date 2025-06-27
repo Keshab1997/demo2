@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>বিষয়ভিত্তিক কুইজ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>📚 বিষয়ভিত্তিক বাংলা কুইজ</h1>
+    <div class="controls">
+      <select id="subject">
+        <option disabled selected>-- বিষয় নির্বাচন করুন --</option>
+        <option value="biology">জীববিজ্ঞান</option>
+        <option value="gk">সাধারণ জ্ঞান</option>
+      </select>
+
+      <select id="chapter" style="display:none">
+        <option disabled selected>-- অধ্যায় নির্বাচন করুন --</option>
+      </select>
+
+      <button id="dark-toggle">🌙 মোড</button>
+    </div>
+    <div id="timer">⏳</div>
+    <div id="progress-bar"><div id="progress"></div></div>
+  </div>
+
+  <div id="quiz-container">
+    <h2 id="question">প্রশ্ন লোড হচ্ছে...</h2>
+    <div id="options"></div>
+    <button id="next">পরবর্তী</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const chapterSelect = document.getElementById("chapter");
+    const subjectSelect = document.getElementById("subject");
+
+    const quizMap = {
+      biology: [
+        { name: "অধ্যায় ১: জীবনের সংজ্ঞা", file: "bio_ch1.json" },
+        { name: "অধ্যায় ২: কোষ ও এর গঠন", file: "bio_ch2.json" }
+      ],
+      gk: [
+        { name: "বাংলাদেশ", file: "gk_bd.json" },
+        { name: "বিশ্ব", file: "gk_world.json" }
+      ]
+    };
+
+    subjectSelect.addEventListener("change", () => {
+      chapterSelect.innerHTML = '<option disabled selected>-- অধ্যায় নির্বাচন করুন --</option>';
+      const subject = subjectSelect.value;
+      const chapters = quizMap[subject] || [];
+      chapters.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.file;
+        opt.textContent = c.name;
+        chapterSelect.appendChild(opt);
+      });
+      chapterSelect.style.display = "inline-block";
+    });
+
+    chapterSelect.addEventListener("change", () => {
+      loadQuiz(chapterSelect.value);
+    });
+  </script>
+</body>
+</html>

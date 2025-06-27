@@ -1,0 +1,129 @@
+/* style.css – Layout, Grid, Dark Mode, Mobile-Friendly */
+
+body {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  margin: 0;
+  padding: 20px;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background: #111;
+  color: #eee;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.controls {
+  margin-top: 10px;
+}
+
+select, #dark-toggle {
+  padding: 6px 10px;
+  margin: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+#quiz-container {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+body.dark #quiz-container {
+  background: #1a1a1a;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+.grid-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.option {
+  padding: 10px;
+  background-color: #e0f2fe;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  background-color: #bae6fd;
+}
+
+body.dark .option {
+  background-color: #333;
+  border-color: #666;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #4f46e5;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+#progress-bar {
+  width: 100%;
+  background: #ddd;
+  height: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progress {
+  height: 100%;
+  width: 0;
+  background: #22c55e;
+  transition: width 0.4s ease;
+}
+
+.result-qa {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f1f5f9;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.3s ease;
+}
+
+body.dark .result-qa {
+  background: #222;
+  border-left-color: #60a5fa;
+}
+
+@media (max-width: 600px) {
+  .grid-options {
+    grid-template-columns: 1fr;
+  }
+  select {
+    width: 100%;
+  }
+  button {
+    width: 100%;
+  }
+}
