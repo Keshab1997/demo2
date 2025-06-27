@@ -1,11 +1,12 @@
-// script.js – Multi-subject, Chapterwise Quiz System with Voice, Color, Explanation
+// script.js – Fully Integrated with Keyboard & Touch Auto Next, Voice, Explanation
 
 let questions = [];
 let current = 0;
 let score = 0;
 let timer;
-let timeLimit = 20; // seconds per question
+let timeLimit = 20;
 let selectedSet = "";
+let answered = false;
 
 function loadQuiz(jsonFile) {
   fetch(jsonFile)
@@ -31,8 +32,9 @@ function showQuestion() {
   `).join('');
 
   document.getElementById("options").innerHTML = `<div class="grid-options">${optsHTML}</div>`;
-  document.getElementById("next").style.display = "block";
+  document.getElementById("next").style.display = "none";
   document.getElementById("explanation")?.remove();
+  answered = false;
 
   startTimer(timeLimit);
   updateProgress();
@@ -48,10 +50,10 @@ function giveFeedback(userAns, correctAns, explanation) {
   const options = document.getElementsByName("opt");
   options.forEach((opt, i) => {
     if (i === correctAns) {
-      opt.parentElement.style.background = "#4ade80"; // green
+      opt.parentElement.style.background = "#4ade80";
     }
     if (i === userAns && userAns !== correctAns) {
-      opt.parentElement.style.background = "#f87171"; // red
+      opt.parentElement.style.background = "#f87171";
     }
   });
 
@@ -67,7 +69,7 @@ function giveFeedback(userAns, correctAns, explanation) {
   document.getElementById("quiz-container").appendChild(explainDiv);
 }
 
-function checkAnswer() {
+function checkAnswer(autoNext = false) {
   const selected = document.querySelector("input[name='opt']:checked");
   if (!selected) return;
 
@@ -80,16 +82,28 @@ function checkAnswer() {
 
   clearInterval(timer);
   giveFeedback(userAnswer, correctAnswer, explanation);
+  answered = true;
 
-  document.getElementById("next").style.display = "block";
-  document.getElementById("next").onclick = () => {
-    current++;
-    if (current < questions.length) {
-      showQuestion();
-    } else {
-      finishQuiz();
-    }
-  };
+  if (autoNext) {
+    setTimeout(() => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        finishQuiz();
+      }
+    }, 2000);
+  } else {
+    document.getElementById("next").style.display = "block";
+    document.getElementById("next").onclick = () => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        finishQuiz();
+      }
+    };
+  }
 }
 
 function finishQuiz() {
@@ -117,7 +131,7 @@ function startTimer(duration) {
     timeDisplay.innerText = `⏳ ${timeLeft}s`;
     if (timeLeft <= 0) {
       clearInterval(timer);
-      checkAnswer();
+      checkAnswer(true);
     }
   }, 1000);
 }
@@ -131,7 +145,6 @@ function updateProgress() {
   document.getElementById("progress").style.width = percent + "%";
 }
 
-// Keyboard support
 document.addEventListener("keydown", (e) => {
   const keys = ['1','2','3','4'];
   if (keys.includes(e.key)) {
@@ -139,21 +152,20 @@ document.addEventListener("keydown", (e) => {
     const index = parseInt(e.key) - 1;
     if (inputs[index]) inputs[index].checked = true;
   }
-  if (e.key === "Enter") {
-    checkAnswer();
+  if (e.key === "Enter" && !answered) {
+    checkAnswer(true);
   }
 });
 
-// Touch support
-document.getElementById("options").addEventListener("click", e => {
-  if (e.target.tagName === "INPUT") {
+document.getElementById("options").addEventListener("click", (e) => {
+  if (e.target && e.target.name === "opt" && !answered) {
     e.target.checked = true;
+    checkAnswer(true);
   }
 });
 
-document.getElementById("next").addEventListener("click", checkAnswer);
+document.getElementById("next").addEventListener("click", () => checkAnswer());
 
-// Dark Mode Toggle
 document.getElementById("dark-toggle").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
