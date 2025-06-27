@@ -118,8 +118,11 @@ function finishQuiz() {
   document.getElementById("quiz-container").innerHTML = `
     <h2>আপনার স্কোর: ${score}/${questions.length}</h2>
     ${result}
-    <button onclick=\"loadQuiz(selectedSet)\">🔁 আবার শুরু করুন</button>
+    <button id="retry">🔁 আবার শুরু করুন</button>
   `;
+  document.getElementById("retry").addEventListener("click", () => {
+    loadQuiz(selectedSet);
+  });
 }
 
 function startTimer(duration) {
